@@ -143,7 +143,6 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         unchecked {
             // trừ số dư tài khoản chỉ định đi
             _balances[account] = accountBalance - amount;
-            
             // trừ số lượng token hiện tại đi
             _totalSupply -= amount;
         }
@@ -180,11 +179,20 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         }
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual {
+    // Lock a specific address
+    function lock(address addr) public {
+        require(msg.sender == minter); // chỉ người tạo hợp đồng mới khóa địa chỉ 
+        locked[addr] = true;
+    }
 
+    // Unlock a specific address
+    function unlock(address addr) public {
+        require(msg.sender == minter); // chỉ người tạo hợp đồng mới mở khóa địa chỉ 
+        locked[addr] = false;
+    }
+    function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual {
     }
 
     function _afterTokenTransfer(address from, address to, uint256 amount) internal virtual {
-
     }
 }
